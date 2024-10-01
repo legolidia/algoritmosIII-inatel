@@ -66,10 +66,10 @@ int dijkstra(list<Aresta> adj[], int n, int start, int end){
          aux = parent[aux];
     } while(aux!=start);
 
-    cout << start << endl;
+    cout << start;
 
     while(!apresentacao.empty()){
-        cout << "->" << apresentacao.front();
+        cout << " -> " << apresentacao.front();
         apresentacao.pop_front();
     }
 
