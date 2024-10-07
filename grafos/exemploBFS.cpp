@@ -43,7 +43,7 @@ int main(){
 	
 	cin >> vertices >> arestas;
 	
-	//grafo nao ponderado e não direcionado
+	//grafo nao ponderado e nï¿½o direcionado
 	bool grafo[5][5];
 	
 	for(int i=0;i<vertices;i++)
