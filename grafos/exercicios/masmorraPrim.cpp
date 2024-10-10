@@ -54,20 +54,16 @@ void prim(list<node> adj[], int vertices, int s)
             }
         }
 
-        v = -1;
+        v = 0;
         dist = INT_MAX;
         for (int u = 0; u < vertices; u++)
         {
             if (!intree[u] && dist > distance[u])
             {
                 dist = distance[u];
-                v = u; // Atualiza v para o próximo vértice a ser processado
+                v = u;
             }
         }
-
-        // Se v não foi atualizado, sai do loop
-        if (v == -1)
-            break;
     }
 
     for (int i = 0; i < vertices; i++)
