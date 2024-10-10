@@ -1,116 +1,111 @@
-#include<iostream>
-#include<list>
-
-#define MAX_VERTICES 10
-#define INT_MAX 999999
+#include <iostream>
+#include <list>
 
 using namespace std;
 
-struct Aresta {
-	int origem, destino, peso;
+#define INT_MAX 100000
+
+struct node
+{
+	int v;
+	int peso;
 };
 
-
-void dijkstra(list<Aresta> adj[], int n, int start, int end){
-    bool intree[n];
-    int distance[n], parent[n];
-	for(int i=0; i<n; i++){
-		intree[i] = false;
-		distance[i] = INT_MAX;
-		parent[i] = -1;
+void criaAresta(list<node> adj[], int u, int v, int w, int orientado)
+{
+	adj[u].push_back({v, w});
+	if (!orientado)
+	{
+		adj[v].push_back({u, w});
 	}
-    distance[start] = 0;
-    int v = start;
-    while(intree[v] == false){
-        intree[v] = true;
-        list<Aresta>::iterator it;
-        for(it = adj[v].begin();it != adj[v].end(); it++){
-			Aresta aresta = *it;
+}
 
-            // if(distance[aresta.destino] > aresta.peso && intree[aresta.destino]==false){
-            //     distance[aresta.destino] = aresta.peso;
-            //     parent[aresta.destino] = v;
-			// }
+void ShortestsPath_Dijkstra(list<node> adj[], int vertices, int start, int end)
+{
+	bool intree[vertices];
+	int distance[vertices];
+	int parent[vertices];
 
-            if(distance[v] + aresta.peso < distance[aresta.destino]){
-                distance[aresta.destino] = distance[v] + aresta.peso;
-                parent[aresta.destino] = v;
-			} 
+	list<node>::iterator it;
+
+	for (int u = 0; u < vertices; u++)
+	{
+		intree[u] = 0;
+		distance[u] = INT_MAX;
+		parent[u] = -1;
+	}
+
+	distance[start] = 0;
+
+	int v = start;
+	int destino;
+	int weight;
+
+	while (!intree[v])
+	{
+		intree[v] = 1;
+		for (it = adj[v].begin(); it != adj[v].end(); it++)
+		{
+			destino = it->v;
+			weight = it->peso;
+			if (distance[destino] > distance[v] + weight)
+			{
+				distance[destino] = distance[v] + weight;
+				parent[destino] = v;
+			}
 		}
-        v = 0;
-        int dist = INT_MAX;
-        for(int i=0; i<n; i++){
-            if(intree[i]==false && dist>distance[i]){
-                dist = distance[i];
-                v = i;
+		v = 0;
+		int dist = INT_MAX;
+		for (int u = 0; u < vertices; u++)
+		{
+			if (!intree[u] && dist > distance[u])
+			{
+				dist = distance[u];
+				v = u;
 			}
 		}
 	}
-	int total = 0;
-	cout<<"Caminho mínimo: "<<endl;
-    
-	// for(int i=0; i<n; i++){
-	// 	if(parent[i] != -1)			
-	//         cout<<parent[i]<<" "<<i<<endl;
-	//     total+=distance[i];
-	// }
 
-    list<int> apresentacao;
-    int aux = end;
+	list<int> menorCaminho;
+	list<int>::iterator it2;
 
-    apresentacao.push_front(aux);
-    aux = parent[aux];
-
-    do {
-         apresentacao.push_front(aux);
-         aux = parent[aux];
-    } while(aux!=start);
-
-    cout << start;
-
-    while(!apresentacao.empty()){
-        cout << " -> " << apresentacao.front();
-        apresentacao.pop_front();
-    }
-
-	cout<<"\nCusto mínimo: "<<distance[end]<< endl;
-		
-}            
-
-int main(){
-	int vertices, origem, destino, peso;
-    bool orientado;
-	cin >> vertices >> orientado >> origem >>destino;
-	
-	//int grafo[vertices][vertices];
-	list<Aresta> grafo[vertices];
-	list<Aresta>::iterator it;
-	
-	// for(int i=0;i<vertices;i++)
-	// 	for(int j=0;j<vertices;j++)
-	// 		grafo[i][j] = INT_MAX;
-
-    cin >> origem >> destino >> peso;
-		
-    for(int i=0; i< arestas; i++){
-		cin >> origem >> destino >> peso;
-		// grafo[origem][destino] = peso;
-		// grafo[destino][origem] = peso;
-		grafo[origem].push_back({origem, destino, peso});
-		grafo[destino].push_back({destino, origem, peso});
-    }
-    
-    for(int i=0;i<vertices;i++){
-		// for(int j=0;j<vertices;j++)
-		// 	cout << grafo[i][j] << " ";
-		cout<<i<<": ";
-		for(it = grafo[i].begin(); it != grafo[i].end(); it++)
-			//cout << (*it).destino << "; "
-			cout << it->destino << "("<< it->peso <<")" << "; ";
-		cout<<endl;
+	int verticeAtual = end;
+	int tamanho = 0;
+	while (verticeAtual != -1)
+	{
+		menorCaminho.push_front(verticeAtual);
+		verticeAtual = parent[verticeAtual];
+		tamanho++;
 	}
-	
-	dijkstra(grafo, vertices, 0, 4);
-    
-	return 0;
+
+	cout << "Menor caminho: ";
+	for (int i = 0; i < tamanho; i++)
+	{
+		cout << menorCaminho.front();
+		if (i != tamanho - 1)
+			cout << " ";
+		menorCaminho.pop_front();
+	}
+	cout << "\nCusto: " << distance[end] << endl;
+}
+
+int main()
+{
+	int vertices;
+	bool orientado;
+	int start, end;
+	int origem, destino, peso;
+
+	cin >> vertices >> orientado >> start >> end;
+	list<node> adj[vertices];
+
+	cin >> origem >> destino >> peso;
+
+	while (origem != -1 && destino != -1 && peso != -1)
+	{
+		criaAresta(adj, origem, destino, peso, orientado);
+		cin >> origem >> destino >> peso;
+	}
+
+	ShortestsPath_Dijkstra(adj, vertices, start, end);
 }
