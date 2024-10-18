@@ -45,13 +45,15 @@ int main()
     Exemplo *pEx;
     pEx = &e1;
 
-    (*pEx).x = 7;
+    (*pEx).x = 7; //p->x = 7;
+    pEx->x = 7;
+    //e1.x == (*p).x == p->x
 
     cout << e1.x << endl;
 
+    cout << &e1 << endl;
     cout << &(e1.x) << endl;
     cout << &(e1.y) << endl;
-    cout << &e1 << endl;
 
     return 0;
 }
