@@ -1,4 +1,6 @@
 #include <iostream>
+#include <string>
+
 using namespace std;
 
 struct treenode
@@ -101,21 +103,19 @@ bool tRemove(treenodeptr &p, int x)
 
 int main()
 {
-    int num, n;
-    cin >> num;
+    int op, n;
+    string nome;
+    cin >> op;
 
     treenodeptr root = NULL;
 
-    for (int i = 0; i < num; i++)
+    while (op != 0)
     {
-        cin >> n;
-        tInsert(root, n);
+        if (op == 1)
+        {
+            tInsert
+        }
     }
-
-    int x;
-    cin >> x;
-
-    (tSearch(root, x)) ? cout << "Encontrado" << endl : cout << "Nao encontrado" << endl;
 
     return 0;
 }

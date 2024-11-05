@@ -102,20 +102,23 @@ bool tRemove(treenodeptr &p, int x)
 int main()
 {
     int num, n;
+    char op;
     cin >> num;
 
     treenodeptr root = NULL;
 
     for (int i = 0; i < num; i++)
     {
-        cin >> n;
-        tInsert(root, n);
+        cin >> op >> n;
+        if (op == 'i')
+        {
+            tInsert(root, n);
+        }
+        else
+        {
+            (tSearch(root, n)) ? cout << "Sim" << endl : cout << "Não" << endl;
+        }
     }
-
-    int x;
-    cin >> x;
-
-    (tSearch(root, x)) ? cout << "Encontrado" << endl : cout << "Nao encontrado" << endl;
 
     return 0;
 }
