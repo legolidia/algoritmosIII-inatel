@@ -3,118 +3,112 @@
 
 using namespace std;
 
+struct Filme
+{
+    string nome;
+    string genero;
+    int duracao;
+    int idade;
+    int ano;
+};
+
 struct treenode
 {
-    int info;
+    Filme filme;
     struct treenode *left;
     struct treenode *right;
 };
 
 typedef treenode *treenodeptr;
 
-void tInsert(treenodeptr &p, int x)
+void tInsert(treenodeptr &p, Filme filme)
 {
     if (p == NULL)
     {
         p = new treenode;
-        p->info = x;
+        p->filme = filme;
         p->left = NULL;
         p->right = NULL;
     }
-    else if (x < p->info)
+    else if (filme.nome < p->filme.nome)
     {
-        tInsert(p->left, x);
+        tInsert(p->left, filme);
     }
     else
     {
-        tInsert(p->right, x);
+        tInsert(p->right, filme);
     }
 }
 
-treenodeptr tSearch(treenodeptr p, int x)
+Filme *tSearch(treenodeptr p, string nome)
 {
     if (p == NULL)
     {
         return NULL;
     }
-    else if (x == p->info)
+    else if (nome == p->filme.nome)
     {
-        return p;
+        return &p->filme;
     }
-    else if (x < p->info)
+    else if (nome < p->filme.nome)
     {
-        return tSearch(p->left, x);
-    }
-    else
-    {
-        return tSearch(p->right, x);
-    }
-}
-
-treenodeptr tPointSmaller(treenodeptr &p)
-{
-    treenodeptr t = p;
-    if (p->left == NULL)
-    {
-        p = p->right;
-        return t;
+        return tSearch(p->left, nome);
     }
     else
     {
-        return tPointSmaller(p->left);
-    }
-}
-
-bool tRemove(treenodeptr &p, int x)
-{
-    treenodeptr t;
-    if (p == NULL)
-    {
-        return false;
-    }
-    if (x == p->info)
-    {
-        t = p;
-        if (p->left == NULL)
-        {
-            p = p->right;
-        }
-        else if (p->right == NULL)
-        {
-            p = p->left;
-        }
-        else
-        {
-            t = tPointSmaller(p->right);
-            p->info = t->info;
-        }
-        delete t;
-        return true;
-    }
-    else if (x < p->info)
-    {
-        return tRemove(p->left, x);
-    }
-    else
-    {
-        return tRemove(p->right, x);
+        return tSearch(p->right, nome);
     }
 }
 
 int main()
 {
-    int op, n;
-    string nome;
-    cin >> op;
-
     treenodeptr root = NULL;
+    Filme filme;
 
+    int op;
+    cin >> op;
     while (op != 0)
     {
-        if (op == 1)
+        switch (op)
         {
-            tInsert
+        case 1:
+        {
+            cin.ignore();
+            getline(cin, filme.nome);
+            getline(cin, filme.genero);
+            cin >> filme.duracao >> filme.idade >> filme.ano;
+
+            tInsert(root, filme);
+            break;
         }
+        case 2:
+        {
+            cin.ignore();
+
+            string nomeBusca;
+            getline(cin, nomeBusca);
+
+            Filme *filmeEncontrado = tSearch(root, nomeBusca);
+            if (filmeEncontrado != NULL)
+            {
+                cout << "Nome: " << filmeEncontrado->nome << endl;
+                cout << "Genero: " << filmeEncontrado->genero << endl;
+                cout << "Duracao: " << filmeEncontrado->duracao << " mins" << endl;
+                cout << "Classificacao: " << filmeEncontrado->idade << endl;
+                cout << "Ano: " << filmeEncontrado->ano << endl;
+            }
+            else
+            {
+                cout << "Filme nao encontrado" << endl;
+            }
+            break;
+        }
+        default:
+            cout << "Operacao invalida" << endl;
+            break;
+        }
+
+        cin >> op;
     }
 
     return 0;
