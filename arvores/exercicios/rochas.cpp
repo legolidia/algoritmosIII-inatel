@@ -1,11 +1,13 @@
 #include <iostream>
-#include <math.h>
+#include <cstring>
 
 using namespace std;
 
-typedef int KeyType;
-typedef int ValueType;
+// dois tipos predefinidos de chave e valor | torta: preço (int)
+typedef string KeyType;
+typedef string ValueType;
 
+// dado dos nós que vão ser adicionados na árvore
 struct DataType
 {
     KeyType key;
@@ -14,11 +16,12 @@ struct DataType
 
 struct Node
 {
-    DataType data;
+    DataType data; // chave e valor
     Node *right;
     Node *left;
 };
 
+// nó raiz e chave e valor
 void insert(Node *&curr, DataType data)
 {
     if (curr == NULL)
@@ -38,9 +41,22 @@ void insert(Node *&curr, DataType data)
         {
             insert(curr->left, data);
         }
+
+        // DEVE SER INSERIDO PELO VALOR
+        // if (data.value >= curr->data.value)
+        // {
+        //     insert(curr->right, data);
+        // }
+        // else if (data.value < curr->data.value)
+        // {
+        //     insert(curr->left, data);
+        // }
+
+        // se mudar na main a inserção, pode manter a função
     }
 }
 
+// correta
 Node *search(Node *curr, KeyType key)
 {
     if (curr == NULL)
@@ -63,20 +79,15 @@ Node *search(Node *curr, KeyType key)
     return NULL;
 }
 
-// vai mudar - recebe intervalo de valores
-void show_ordered(Node *curr, int pmin, int pmax)
+// se manter a função anterior, deve-se trocar a ordem de key e value
+void show_ordered(Node *curr)
 {
     if (curr->left != NULL)
-        show_ordered(curr->left, pmin, pmax);
-
-    // verifica intervalo
-    if (curr->data.key >= pmin && curr->data.key <= pmax)
-    {
-        // inverteu key e value
-        cout << curr->data.value << ":" << curr->data.key << endl;
-    }
+        show_ordered(curr->left);
+    // cout << curr->data.key << ":" << curr->data.value << endl;
+    cout << curr->data.value << ":" << curr->data.key << endl;
     if (curr->right != NULL)
-        show_ordered(curr->right, pmin, pmax);
+        show_ordered(curr->right);
 }
 
 Node *disconnect_lesser(Node *&curr)
@@ -144,79 +155,56 @@ void destruct(Node *&curr)
     return;
 }
 
-typedef struct
-{
-    int x;
-    int y;
-} Ponto;
-
-double area_triangulo(
-    Ponto a,
-    Ponto b,
-    Ponto c)
-{
-    return ((a.x * b.y) - (a.y * b.x) +
-            (a.y * c.x) - (a.x * c.y) +
-            (b.x * c.y) - (b.y * c.x)) /
-           2.0;
-}
-
-double distancia(Ponto p1, Ponto p2)
-{
-    return sqrt((p1.x - p2.x) * (p1.x - p2.x) +
-                (p1.y - p2.y) * (p1.y - p2.y));
-}
-
-int orientacao(Ponto a, Ponto b, Ponto c)
-{
-    double area = area_triangulo(a, b, c);
-    if (area > 0)
-    {
-        return 1;
-    }
-    else if (area < 0)
-    {
-        return -1;
-    }
-    else
-    {
-        return 0;
-    }
-}
-
 int main()
 {
     Node *root = NULL;
     DataType aux;
 
-    int t, p, pf, pmin, pmax;
-    Ponto a, b, c, d;
-    float EM, D, A;
+    int op;
+    string nomeRocha, tipoRocha;
 
-    cin >> t;
-    for (int i = 0; i < t; i++)
+    while (true)
     {
-        cin >> a.x >> a.y;
-        cin >> b.x >> b.y;
-        cin >> c.x >> c.y;
-        cin >> d.x >> d.y;
+        cin >> op;
 
-        cin >> p;
+        if (op == 0)
+        {
+            break;
+        }
 
-        EM = distancia(a, b);
-        A = distancia(a, c);
-        D = distancia(c, d);
+        cin >> nomeRocha;
 
-        pf = EM * p * A + D + A;
+        switch (op)
+        {
+        case 1:
+            cin >> tipoRocha;
+            aux.value = tipoRocha;
+            aux.key = nomeRocha;
+            insert(root, aux);
+            break;
+        case 2:
+            Node *rocha;
+            rocha = (search(root, nomeRocha));
+            (rocha) ? cout << "Nome: " << rocha->data.key << endl
+                           << "Tipo: " << rocha->data.value << endl
+                    : cout << "Rocha nao encontrada" << endl;
+            break;
+        case 3:
 
-        aux.key = pf;
-        aux.value = i;
-        insert(root, aux);
+            cin >> tipoRocha;
+            rocha = (search(root, nomeRocha));
+            if (rocha->data.value == tipoRocha & rocha->data.key == nomeRocha)
+            {
+                remove(root, nomeRocha);
+                cout << "Rocha removida com sucesso" << endl;
+            }
+            else
+            {
+                cout << "Rocha nao encontrada para remocao" << endl;
+            }
+            break;
+        }
     }
-
-    cin >> pmin >> pmax;
-
-    show_ordered(root, pmin, pmax);
 
     return 0;
 }
